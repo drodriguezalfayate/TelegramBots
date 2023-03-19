@@ -26,7 +26,6 @@ public class TelegramHttpClientBuilder {
         HttpClientBuilder httpClientBuilder =
                HttpClientBuilder.create()
                                 .useSystemProperties()
-                                .setConnectionReuseStrategy((response,context)->true)
                                 .setSSLHostnameVerifier(new NoopHostnameVerifier())
                                 .setConnectionTimeToLive(options.getKeepAliveTtl(), TimeUnit.SECONDS)
                                 .setMaxConnTotal(options.getConnectionPoolSize());
