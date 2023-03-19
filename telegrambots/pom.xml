@@ -10,7 +10,7 @@
         <version>6.5.0</version>
     </parent>
 
-    <artifactId>telegrambots</artifactId>
+    <artifactId>telegrambots-proxy</artifactId>
     <packaging>jar</packaging>
 
     <name>Telegram Bots</name>
