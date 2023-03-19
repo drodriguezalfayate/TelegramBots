@@ -1,8 +1,6 @@
 package org.telegram.telegrambots.bots;
 
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.protocol.HttpContext;
 import org.telegram.telegrambots.meta.ApiConstants;
 import org.telegram.telegrambots.meta.generics.BotOptions;
 import org.telegram.telegrambots.meta.generics.BackOff;
@@ -21,16 +19,15 @@ public class DefaultBotOptions implements BotOptions {
      */
     private int maxThreads;
     private RequestConfig requestConfig;
-    private volatile HttpContext httpContext;
     private BackOff backOff;
     private Integer maxWebhookConnections;
     private String baseUrl;
     private List<String> allowedUpdates;
-    private ProxyType proxyType;
-    private String proxyHost;
-    private int proxyPort;
     private int getUpdatesTimeout;
     private int getUpdatesLimit;
+
+    private int keepAliveTtl;
+    private int connectionPoolSize;
 
     public enum ProxyType {
         NO_PROXY,
@@ -42,10 +39,10 @@ public class DefaultBotOptions implements BotOptions {
     public DefaultBotOptions() {
         maxThreads = 1;
         baseUrl = ApiConstants.BASE_URL;
-        httpContext = HttpClientContext.create();
-        proxyType = ProxyType.NO_PROXY;
         getUpdatesTimeout = ApiConstants.GETUPDATES_TIMEOUT;
         getUpdatesLimit = 100;
+        keepAliveTtl = 70; // 70 seconds
+        connectionPoolSize = 100; // 100 connections per pool
     }
 
     @Override
@@ -73,13 +70,6 @@ public class DefaultBotOptions implements BotOptions {
         return maxWebhookConnections;
     }
 
-    public HttpContext getHttpContext() {
-        return httpContext;
-    }
-
-    public void setHttpContext(HttpContext httpContext) {
-        this.httpContext = httpContext;
-    }
 
     public void setMaxWebhookConnections(Integer maxWebhookConnections) {
         this.maxWebhookConnections = maxWebhookConnections;
@@ -113,30 +103,6 @@ public class DefaultBotOptions implements BotOptions {
         this.backOff = BackOff;
     }
 
-    public ProxyType getProxyType() {
-        return proxyType;
-    }
-
-    public void setProxyType(ProxyType proxyType) {
-        this.proxyType = proxyType;
-    }
-
-    public String getProxyHost() {
-        return proxyHost;
-    }
-
-    public void setProxyHost(String proxyHost) {
-        this.proxyHost = proxyHost;
-    }
-
-    public int getProxyPort() {
-        return proxyPort;
-    }
-
-    public void setProxyPort(int proxyPort) {
-        this.proxyPort = proxyPort;
-    }
-
     public int getGetUpdatesTimeout() {
         return getUpdatesTimeout;
     }
@@ -151,5 +117,21 @@ public class DefaultBotOptions implements BotOptions {
 
     public void setGetUpdatesLimit(int getUpdatesLimit) {
         this.getUpdatesLimit = getUpdatesLimit;
+    }
+
+    public int getKeepAliveTtl() {
+        return keepAliveTtl;
+    }
+
+    public void setKeepAliveTtl(int keepAliveTtl) {
+        this.keepAliveTtl = keepAliveTtl;
+    }
+
+    public int getConnectionPoolSize() {
+        return connectionPoolSize;
+    }
+
+    public void setConnectionPoolSize(int connectionPoolSize) {
+        this.connectionPoolSize = connectionPoolSize;
     }
 }

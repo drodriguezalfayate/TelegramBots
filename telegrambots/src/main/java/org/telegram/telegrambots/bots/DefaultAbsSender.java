@@ -1103,17 +1103,6 @@ public abstract class DefaultAbsSender extends AbsSender {
 
     private void configureHttpContext() {
 
-        if (options.getProxyType() != DefaultBotOptions.ProxyType.NO_PROXY) {
-            InetSocketAddress socksaddr = new InetSocketAddress(options.getProxyHost(), options.getProxyPort());
-            options.getHttpContext().setAttribute("socketAddress", socksaddr);
-        }
-
-        if (options.getProxyType() == DefaultBotOptions.ProxyType.SOCKS4) {
-            options.getHttpContext().setAttribute("socksVersion", 4);
-        }
-        if (options.getProxyType() == DefaultBotOptions.ProxyType.SOCKS5) {
-            options.getHttpContext().setAttribute("socksVersion", 5);
-        }
 
     }
 
@@ -1127,7 +1116,7 @@ public abstract class DefaultAbsSender extends AbsSender {
     }
 
     private String sendHttpPostRequest(HttpPost httppost) throws IOException {
-        try (CloseableHttpResponse response = httpClient.execute(httppost, options.getHttpContext())) {
+        try (CloseableHttpResponse response = httpClient.execute(httppost)) {
             return EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
         }
     }

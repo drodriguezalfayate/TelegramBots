@@ -89,7 +89,7 @@ public final class WebhookUtils {
 
       HttpEntity multipart = builder.build();
       httppost.setEntity(multipart);
-      try (CloseableHttpResponse response = httpclient.execute(httppost, botOptions.getHttpContext())) {
+      try (CloseableHttpResponse response = httpclient.execute(httppost)) {
         String responseContent = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
         Boolean result = setWebhook.deserializeResponse(responseContent);
         if (!result) {

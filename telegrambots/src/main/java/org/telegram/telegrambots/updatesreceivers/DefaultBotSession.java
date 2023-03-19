@@ -246,7 +246,7 @@ public class DefaultBotSession implements BotSession {
             httpPost.setConfig(requestConfig);
             httpPost.setEntity(new StringEntity(objectMapper.writeValueAsString(request), ContentType.APPLICATION_JSON));
 
-            try (CloseableHttpResponse response = httpclient.execute(httpPost, options.getHttpContext())) {
+            try (CloseableHttpResponse response = httpclient.execute(httpPost)) {
                 String responseContent = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
 
                 if (response.getStatusLine().getStatusCode() >= 500) {

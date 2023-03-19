@@ -23,33 +23,15 @@ import java.util.concurrent.TimeUnit;
 public class TelegramHttpClientBuilder {
 
     public static CloseableHttpClient build(DefaultBotOptions options) {
-        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create()
-                .setSSLHostnameVerifier(new NoopHostnameVerifier())
-                .setConnectionManager(createConnectionManager(options))
-                .setConnectionTimeToLive(70, TimeUnit.SECONDS)
-                .setMaxConnTotal(100);
+        HttpClientBuilder httpClientBuilder =
+               HttpClientBuilder.create()
+                                .useSystemProperties()
+                                .setConnectionReuseStrategy((response,context)->true)
+                                .setSSLHostnameVerifier(new NoopHostnameVerifier())
+                                .setConnectionTimeToLive(options.getKeepAliveTtl(), TimeUnit.SECONDS)
+                                .setMaxConnTotal(options.getConnectionPoolSize());
         return httpClientBuilder.build();
     }
 
-    private static HttpClientConnectionManager createConnectionManager(DefaultBotOptions options) {
-        Registry<ConnectionSocketFactory> registry;
-        switch (options.getProxyType()) {
-            case NO_PROXY:
-                return null;
-            case HTTP:
-                registry = RegistryBuilder.<ConnectionSocketFactory> create()
-                        .register("http", new HttpConnectionSocketFactory())
-                        .register("https", new HttpSSLConnectionSocketFactory(SSLContexts.createSystemDefault())).build();
-                return new PoolingHttpClientConnectionManager(registry);
-            case SOCKS4:
-            case SOCKS5:
-                registry = RegistryBuilder.<ConnectionSocketFactory> create()
-                        .register("http", new SocksConnectionSocketFactory())
-                        .register("https", new SocksSSLConnectionSocketFactory(SSLContexts.createSystemDefault()))
-                        .build();
-                return new PoolingHttpClientConnectionManager(registry);
-        }
-        return null;
-    }
 
 }
